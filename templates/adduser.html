@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adduser</title>
+    <!-- Bootstrap 3.3.7 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <style>
+        .profile-dropdown-toggle::after {
+            display: none;
+        }
+
+        .side-nav {
+            height: 100vh;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            background-color: #000;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .side-nav a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .side-nav a:hover {
+            color: #f1f1f1;
+            background-color: #575757;
+        }
+
+        .content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+
+
+            /* Always float the navbar header to the left */
+            .navbar-header {
+                float: left;
+            }
+
+            /* Override the collapsing behavior */
+            .navbar-collapse.collapse {
+                display: block !important;
+                height: auto !important;
+                padding-bottom: 0;
+                overflow: visible !important;
+            }
+
+            /* Ensure navbar items are displayed inline */
+            .navbar-nav>li {
+                display: inline-block;
+            }
+
+            /* Center the navbar items */
+            .navbar-nav {
+                float: none;
+                /* text-align: center; */
+                text-align: right;
+
+            }
+
+            /* Adjust the dropdown menu position */
+            .navbar-right .dropdown-menu {
+                right: 0;
+                left: auto;
+            }
+
+            /* Optional: Increase the size of the toggle for better usability */
+            .navbar-toggle {
+                display: none;
+                /* You might choose to hide or show and increase its size */
+            }
+
+            /* Adjust the brand logo size if necessary */
+            .navbar-brand img {
+                max-width: 100%;
+                height: auto;
+            }
+
+
+            @media (max-width: 768px) {
+                #searchForm {
+                    display: flex;
+                    align-items: center;
+                    /* Align items vertically */
+                    justify-content: flex-start;
+
+                    /* Align items to the start of the container */
+                    flex-wrap: nowrap;
+                    /* Prevent wrapping */
+                    padding-left: 500px;
+                    /* Adjust based on sidebar presence */
+                }
+
+                #searchForm .form-control,
+                #searchForm .btn,
+                #searchForm select {
+                    margin: 0 5px;
+                    /* Minimal margin between elements */
+                    flex-grow: 0;
+                    /* Prevent growth */
+                    flex-shrink: 0;
+                    /* Prevent shrink */
+                    width: auto;
+                    /* Adjust width automatically */
+                }
+
+                /* Example: Reduce the size of inputs/selects */
+                #searchForm input[type="search"],
+                #searchForm select {
+                    max-width: 120px;
+                    /* Adjust based on needs */
+                }
+
+                /* Reduce the padding inside the form elements to save space */
+                #searchForm .form-control,
+                #searchForm .btn {
+                    padding: 6px 12px;
+                    font-size: 12px;
+                    /* Reduce font size for space */
+                }
+
+                /* Adjust the clear filters button to be smaller or replaced with an icon */
+                #searchForm .btn-secondary {
+                    padding: 6px 6px;
+                    /* Smaller padding */
+                    font-size: 12px;
+                    /* Smaller text */
+                }
+
+                /* Hide text on clear filters button, show only on large screens */
+                #searchForm .btn-secondary .text {
+                    display: none;
+                }
+
+                /* Optional: use an icon for the clear button */
+                #searchForm .btn-secondary:before {
+                    content: "\2715";
+                    display: inline-block;
+                }
+            }
+
+            .btn-success {
+                background-color: #28a745;
+            }
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar using Bootstrap 3 structure -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="path/to/your/logo.png" width="30" height="30" class="d-inline-block align-top" alt=""
+                        loading="lazy">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">{{ session['username'] if 'username' in session else 'Guest' }}</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            aria-expanded="false">
+                            <img src="path/to/profile/picture.jpg" width="30" height="30" class="rounded-circle"
+                                alt="Profile Picture"> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url_for('login')}}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid" style="padding-top: 70px;">
+        <div class="row">
+            <div class="col-md-12" id="search-and-add">
+                <form class="form-inline text-right" action="/search_user" method="post">
+                    <input type="search" class="form-control" placeholder="Search" name="search"
+                        style="margin-right: 5px;">
+                    <button type="submit" class="btn btn-success" style="margin-right: 5px;">Search</button>
+                    <button type="button" class="btn btn-warning pull-right" data-toggle="modal"
+                        data-target="#addCategoryModal">
+                        Add Customer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="side-nav">
+        <a href="/index"><i class="fa fa-home"></i> Home</a>
+        <a href="/addcategory"><i class="fa fa-tags"></i> Category</a>
+        <a href="/adduser"><i class="fa fa-users"></i> Customers</a>
+        <a href="/createuser"><i class="fa fa-user-plus"></i> Users</a>
+    </div>
+    <div class="content">
+        <table class="table hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Customer Name</th>
+                    <th>Mobile Number</th>
+                    <th>Email</th>
+                    <th>Location</th>
+                    <th colspan="2">Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+
+
+                {% for customer in customers %}
+
+                <tr>
+                    <td>{{ customer.id }}</td>
+                    <!-- <td>{{ customer.customer_name }}</td> -->
+                    <td><a href="{{ url_for('user_profile', user_id=customer.id) }}">{{ customer.customer_name }}</a>
+                    </td>
+
+                    <td>{{ customer.mobile_number }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.location }}</td>
+
+                    <!-- <td>
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="glyphicon glyphicon-option-vertical"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" data-toggle="modal"
+                                        data-target="#editCustomerModal-{{ customer.id }}">Edit</a></li>
+                                <li>
+                                    <form action="{{ url_for('delete_customer', id=customer.id) }}" method="post"
+                                        onsubmit="return confirm('Are you sure?');">
+                                        <button type="submit" class="btn btn-link">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </td> -->
+                    <td>
+
+                        <a href="#" data-toggle="modal" data-target="#editCustomerModal-{{ customer.id }}"><i
+                                class="fas fa-edit"></i></a>
+
+                    </td>
+                    <td>
+                        <form action="{{ url_for('delete_customer', id=customer.id) }}" method="post"
+                            onsubmit="return confirm('Are you sure?');">
+                            <button type="submit" class="btn btn-link"><i class="fas fa-trash-alt"></i></button>
+                            <!-- Delete icon -->
+                        </form>
+                    </td>
+                    <td><a href="{{ url_for('user_profile', user_id=customer.id) }}" class="btn btn-success">View
+                            Profile</a></td>
+                    <td>
+                        <button onclick="generateAndShowLink('{{ customer.id }}')" class="btn btn-warning">Generate
+                            Upload Link</button>
+                    </td>
+
+                    <td><a href="{{ url_for('upload_documents', user_id=customer.id) }}" class="btn btn-primary">Upload
+                            Documents</a></td>
+                    </td>
+                </tr>
+                <div class="modal fade" id="editCustomerModal-{{ customer.id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="editCustomerLabel-{{ customer.id }}">
+                    <!-- Modal content -->
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <!-- Corrected form action to use 'customer.id' -->
+                            <form action="{{ url_for('edit_customer', id=customer.id) }}" method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Customer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Corrected form fields to use 'customer' -->
+                                    <div class="form-group">
+                                        <label>Customer Name</label>
+                                        <input type="text" name="cname" class="form-control"
+                                            value="{{ customer.customer_name }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" name="email" class="form-control"
+                                            value="{{ customer.email }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mobile</label>
+                                        <!-- <input type="number" name="mobileNumber" class="form-control"
+                                            value="{{ customer.mobile_number }}" required> -->
+                                        <input type="tel" class="form-control" id="mobileNumber" name="mobileNumber"
+                                            required maxlength="10" pattern="\d{10}"
+                                            title="Mobile number must be 10 digits" value="{{customer.mobile_number}}">
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Location</label>
+                                        <input type="text" name="location" class="form-control"
+                                            value="{{ customer.location }}" required>
+                                    </div>
+                                    <!-- CSRF token should be added here if you're using Flask-WTF for CSRF protection -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="{{ 'disabled' if not pagination.has_prev }}">
+                    <a href="{{ url_for('adduser', page=pagination.prev_num) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% for page in pagination.iter_pages() %}
+                <li class="{{ 'active' if page == pagination.page }}">
+                    <a href="{{ url_for('adduser', page=page) }}">{{ page }}</a>
+                </li>
+                {% endfor %}
+                <li class="{{ 'disabled' if not pagination.has_next }}">
+                    <a href="{{ url_for('adduser', page=pagination.next_num) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <!-- Modal -->
+
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalLabel">Add Customer</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('adduser') }}">
+                        <div class="form-group">
+                            <label for="customerName">Customer Name</label>
+                            <input type="text" class="form-control" id="customerName" required name="cname">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" required name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="mobileNumber">Mobile Number</label>
+                            <!-- <input type="number" class="form-control" id="mobileNumber" required name="mobileNumber"> -->
+                            <input type="tel" class="form-control" id="mobileNumber" name="mobileNumber" required
+                                maxlength="10" pattern="\d{10}" title="Mobile number must be 10 digits">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" class="form-control" id="location" required name="location">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade " id="linkModal" tabindex="-1" role="dialog" aria-labelledby="linkModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="linkModalLabel">Your Upload Link</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body " style="display: flex;">
+                    <input type="text" class="form-control" id="generatedLink" value="https://example.com" readonly>
+                    <button type="button" class="btn btn-primary mt-2" id="copyButton" onclick="copyToClipboard()">
+                        Copy Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            var navbarHeight = $('.navbar').outerHeight();
+            $('.side-nav').css('top', navbarHeight + 'px');
+        });
+
+        function generateAndShowLink(userId) {
+            fetch(`/generate_link/${userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.link) {
+                        document.getElementById('generatedLink').value = data.link; // Set link in input field
+                        $('#linkModal').modal('show'); // Display the modal
+                    } else {
+                        alert('Link generation failed, no link provided.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    alert('Error generating link: ' + error.message);
+                });
+        }
+
+        // function copyToClipboard() {
+        //     var copyText = document.getElementById("generatedLink");
+        //     copyText.select();
+        //     copyText.setSelectionRange(0, 99999);
+        //     document.execCommand("copy");
+        //     alert("Copied to clipboard: " + copyText.value);
+        // }
+        function copyToClipboard() {
+            var copyText = document.getElementById("generatedLink");
+            copyText.select();
+            document.execCommand("copy");
+
+            var copyButton = document.getElementById("copyButton");
+            copyButton.innerHTML = 'Copied <i class="fas fa-check"></i>'; // Assumes FontAwesome is used for icons
+            copyButton.classList.add("btn-success"); // Change button color to green
+            copyButton.classList.remove("btn-primary");
+
+            setTimeout(function () { // Reset button after 3 seconds
+                copyButton.innerHTML = "Copy Link";
+                copyButton.classList.add("btn-primary");
+                copyButton.classList.remove("btn-success");
+            }, 3000);
+        }
+
+    </script>
+    <script>function validateMobileNumber(input) {
+            // Remove any characters that are not digits
+            input.value = input.value.replace(/\D/g, '');
+
+            // Limit to 10 digits
+            if (input.value.length > 10) {
+                input.value = input.value.slice(0, 10);
+            }
+        }
+    </script>
+
+    <!-- Include Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/js/bootstrap.min.js"></script> -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script> -->
+
+</body>
+
+</html>

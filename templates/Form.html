@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Input Form</title>
+    <!-- Bootstrap 3.3.7 CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div id="adminMessage" class="alert alert-info">Write a required form <span></span>
+        </div>
+
+        <form id="userInputForm">
+            <div id="inputContainer" class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="userText[]" placeholder="Enter your text">
+                    <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button" onclick="deleteField(this)">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addInputField()">
+                <span class="glyphicon glyphicon-plus"></span> Add More
+            </button>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function addInputField() {
+            var container = document.getElementById("inputContainer");
+            var inputs = container.getElementsByTagName('input');
+            var lastInput = inputs[inputs.length - 1];
+            if (lastInput.value !== '') {
+                var newInputGroup = document.createElement("div");
+                newInputGroup.className = "input-group mt-2";
+
+                var newInput = document.createElement("input");
+                newInput.type = "text";
+                newInput.name = "userText[]";
+                newInput.placeholder = "Enter your text";
+                newInput.className = "form-control";
+
+                var inputGroupBtn = document.createElement("span");
+                inputGroupBtn.className = "input-group-btn";
+
+                var deleteBtn = document.createElement("button");
+                deleteBtn.className = "btn btn-danger";
+                deleteBtn.type = "button";
+                deleteBtn.onclick = function () { deleteField(deleteBtn); };
+                deleteBtn.innerHTML = '<span class="glyphicon glyphicon-trash"></span>';
+
+                inputGroupBtn.appendChild(deleteBtn);
+                newInputGroup.appendChild(newInput);
+                newInputGroup.appendChild(inputGroupBtn);
+                container.appendChild(newInputGroup);
+            } else {
+                alert("Please fill out the last field before adding a new one.");
+            }
+        }
+
+        function deleteField(btn) {
+            var inputGroup = btn.parentNode.parentNode;
+            inputGroup.parentNode.removeChild(inputGroup);
+        }
+
+        document.getElementById('userInputForm').onsubmit = function (e) {
+            e.preventDefault(); // Prevent form submission to a server
+            let inputs = document.querySelectorAll('input[name="userText[]"]');
+            console.log("User inputs:");
+            inputs.forEach(input => console.log(input.value));
+        }
+    </script>
+</body>
+
+</html>

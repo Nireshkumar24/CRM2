@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User Files</title>
+</head>
+
+<body>
+    <h1>Files Uploaded by: {{ user_name }} (User ID: {{ user_id }})</h1>
+    <ul>
+        {% for file in files %}
+        <li><a href="{{ url_for('download_file', user_id=user_id, name=file) }}">{{ file }}</a></li>
+        {% else %}
+        <li>No files uploaded yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

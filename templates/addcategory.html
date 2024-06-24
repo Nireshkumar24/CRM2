@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addcategory</title>
+    <!-- Bootstrap 3.3.7 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <style>
+        .profile-dropdown-toggle::after {
+            display: none;
+        }
+
+        .side-nav {
+            height: 100vh;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            background-color: #000;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .side-nav a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .side-nav a:hover {
+            color: #f1f1f1;
+            background-color: #575757;
+        }
+
+        .content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+
+
+            /* Always float the navbar header to the left */
+            .navbar-header {
+                float: left;
+            }
+
+            /* Override the collapsing behavior */
+            .navbar-collapse.collapse {
+                display: block !important;
+                height: auto !important;
+                padding-bottom: 0;
+                overflow: visible !important;
+            }
+
+            /* Ensure navbar items are displayed inline */
+            .navbar-nav>li {
+                display: inline-block;
+            }
+
+            /* Center the navbar items */
+            .navbar-nav {
+                float: none;
+                /* text-align: center; */
+                text-align: right;
+
+            }
+
+            /* Adjust the dropdown menu position */
+            .navbar-right .dropdown-menu {
+                right: 0;
+                left: auto;
+            }
+
+            /* Optional: Increase the size of the toggle for better usability */
+            .navbar-toggle {
+                display: none;
+                /* You might choose to hide or show and increase its size */
+            }
+
+            /* Adjust the brand logo size if necessary */
+            .navbar-brand img {
+                max-width: 100%;
+                height: auto;
+            }
+
+
+            @media (max-width: 768px) {
+                #searchForm {
+                    display: flex;
+                    align-items: center;
+                    /* Align items vertically */
+                    justify-content: flex-start;
+
+                    /* Align items to the start of the container */
+                    flex-wrap: nowrap;
+                    /* Prevent wrapping */
+                    padding-left: 400px;
+                    /* Adjust based on sidebar presence */
+                }
+
+                #searchForm .form-control,
+                #searchForm .btn,
+                #searchForm select {
+                    margin: 0 5px;
+                    /* Minimal margin between elements */
+                    flex-grow: 0;
+                    /* Prevent growth */
+                    flex-shrink: 0;
+                    /* Prevent shrink */
+                    width: auto;
+                    /* Adjust width automatically */
+                }
+
+                /* Example: Reduce the size of inputs/selects */
+                #searchForm input[type="search"],
+                #searchForm select {
+                    max-width: 120px;
+                    /* Adjust based on needs */
+                }
+
+                /* Reduce the padding inside the form elements to save space */
+                #searchForm .form-control,
+                #searchForm .btn {
+                    padding: 6px 12px;
+                    font-size: 12px;
+                    /* Reduce font size for space */
+                }
+
+                /* Adjust the clear filters button to be smaller or replaced with an icon */
+                #searchForm .btn-secondary {
+                    padding: 6px 6px;
+                    /* Smaller padding */
+                    font-size: 12px;
+                    /* Smaller text */
+                }
+
+                /* Hide text on clear filters button, show only on large screens */
+                #searchForm .btn-secondary .text {
+                    display: none;
+                }
+
+                /* Optional: use an icon for the clear button */
+                #searchForm .btn-secondary:before {
+                    content: "\2715";
+                    display: inline-block;
+                }
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar using Bootstrap 3 structure -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="path/to/your/logo.png" width="30" height="30" class="d-inline-block align-top" alt=""
+                        loading="lazy">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">{{ session['username'] if 'username' in session else 'Guest' }}</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            aria-expanded="false">
+                            <img src="path/to/profile/picture.jpg" width="30" height="30" class="rounded-circle"
+                                alt="Profile Picture"> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url_for('login')}}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid" style="padding-top: 70px;">
+        <div class="row">
+            <div class="col-md-12" id="search-and-add">
+                <form class="form-inline text-right" action="/search" method="post">
+                    <input type="search" class="form-control" placeholder="Search" name="search"
+                        style="margin-right: 5px;">
+                    <button type="submit" class="btn btn-success" style="margin-right: 5px;">Search</button>
+                    <button type="button" class="btn btn-warning pull-right" data-toggle="modal"
+                        data-target="#addCategoryModal">
+                        Add Category
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="side-nav">
+        <a href="/index"><i class="fa fa-home"></i> Home</a>
+        <a href="/addcategory"><i class="fa fa-tags"></i> Category</a>
+        <a href="/adduser"><i class="fa fa-users"></i> Customers</a>
+        <a href="/createuser"><i class="fa fa-user-plus"></i> Users</a>
+    </div>
+    <div class="content">
+        <table class="table  hover">
+            <thead>
+                <tr>
+                    <th scope="col">S.No</th>
+                    <th scope="col">Category</th>
+                    <th colspan="2" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody {% for category in categories %} <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ category.category }}</td>
+                <!-- <td>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <span class="glyphicon glyphicon-option-vertical"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+
+                            <li><a href="#" data-toggle="modal"
+                                    data-target="#editCategoryModal-{{ category.id }}">Edit</a></li>
+
+                            <li>
+                                <form action="{{ url_for('delete_category', id=category.id) }}" method="post">
+                                    <button type="submit" class="btn btn-link">Delete</button>
+                                </form>
+                            </li>
+
+                        </ul>
+                    </div>
+                </td> -->
+                <td>
+
+                    <a href="#" data-toggle="modal" data-target="#editCategoryModal-{{ category.id }}"><i
+                            class="fas fa-edit"></i></a>
+
+                </td>
+                <td>
+                    <form action="{{ url_for('delete_category', id=category.id) }}" method="post"
+                        onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn btn-link"><i class="fas fa-trash-alt"></i></button>
+                        <!-- Delete icon -->
+                    </form>
+                </td>
+                </tr>
+                <!--efit and delete popup-->
+
+                <div class="modal fade" id="editCategoryModal-{{ category.id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="editCategoryLabel-{{ category.id }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editCategoryLabel-{{ category.id }}">Edit Category</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="{{ url_for('edit_category', id=category.id) }}">
+                                    <div class="form-group">
+                                        <label for="category-{{ category.id }}">Category Name</label>
+                                        <input type="text" class="form-control" id="category-{{ category.id }}"
+                                            name="category" value="{{ category.category }}" required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </tbody>
+            </thead>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="{{ 'disabled' if not pagination.has_prev }}">
+                    <a href="{{ url_for('addcategory', page=pagination.prev_num) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% for page in pagination.iter_pages() %}
+                <li class="{{ 'active' if page == pagination.page }}">
+                    <a href="{{ url_for('addcategory', page=page) }}">{{ page }}</a>
+                </li>
+                {% endfor %}
+                <li class="{{ 'disabled' if not pagination.has_next }}">
+                    <a href="{{ url_for('addcategory', page=pagination.next_num) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalLabel">Add Category</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('addcategory') }}">
+                        <div class="form-group">
+                            <label for="Description">Your Category</label>
+                            <textarea class="form-control" id="description" required name="category"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var navbarHeight = $('.navbar').outerHeight();
+            $('.side-nav').css('top', navbarHeight + 'px');
+        });
+    </script>
+</body>
+
+</html>

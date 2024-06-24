@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+</head>
+
+<body>
+    <h2>User Form</h2>
+    <form method="POST" action="{{ url_for('user_form', user_id=user_id) }}" enctype="multipart/form-data">
+        {% for field in field_names %}
+        <div class="form-group">
+            <label for="{{ field['name'] }}">{{ field['name'] }}</label>
+
+            <input type="file" name="{{ field['name'] }}" id="{{ field['name'] }}" class="form-control">
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+
+
+</body>
+
+</html>

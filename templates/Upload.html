@@ -1,0 +1,73 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Documents</title>
+</head>
+
+<body>
+    <h1>Upload Documents for User ID: {{ user_id }}</h1>
+    <form action="{{ url_for('upload_documents', user_id=user_id) }}" method="post" enctype="multipart/form-data">
+        <label for="aadhar">Aadhar Card:</label>
+        <input type="file" name="aadhar" id="aadhar"><br>
+        <label for="pan">PAN Card:</label>
+        <input type="file" name="pan" id="pan"><br>
+        <label for="bank_statement">Bank Statement:</label>
+        <input type="file" name="bank_statement" id="bank_statement"><br>
+        <label for="passbook">Passbook:</label>
+        <input type="file" name="passbook" id="passbook"><br>
+        <label for="certificate">Certificate:</label>
+        <input type="file" name="certificate" id="certificate"><br>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Documents</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Upload Documents for User ID: {{ user_id }}</h1>
+        <form action="{{ url_for('upload_documents', user_id=user_id) }}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="aadhar">Aadhar Card:</label>
+                <input type="file" name="aadhar" id="aadhar" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label for="pan">PAN Card:</label>
+                <input type="file" name="pan" id="pan" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label for="bank_statement">Bank Statement:</label>
+                <input type="file" name="bank_statement" id="bank_statement" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label for="passbook">Passbook:</label>
+                <input type="file" name="passbook" id="passbook" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label for="certificate">Certificate:</label>
+                <input type="file" name="certificate" id="certificate" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+
+    <!-- Optional: Include jQuery and Bootstrap JS for responsive behaviors and components like modals -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
